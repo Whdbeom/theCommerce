@@ -3,3 +3,21 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: 8885
+  servlet:
+    encoding:
+      charset: utf-8
+      enabled: true
+
+  config:
+    import:
+      - classpath:/config/secret.yml
+
+logging.level:
+  org.hibernate.SQL: trace
