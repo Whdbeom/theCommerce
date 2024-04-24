@@ -40,16 +40,14 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+
+        <!-- Oracle JDBC Driver -->
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc11</artifactId>
-            <scope>runtime</scope>
+            <artifactId>ojdbc8</artifactId>
+            <version>21.9.0.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -96,6 +94,20 @@
             <version>1.2</version>
         </dependency>
 
+        <!-- JPA 하이버네이트 -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>5.6.15.Final</version>
+<!--            <version>5.3.10.Final</version>-->
+        </dependency>
+
+        <!-- H2 데이터베이스 -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.222</version>
+        </dependency>
     </dependencies>
 
     <build>
