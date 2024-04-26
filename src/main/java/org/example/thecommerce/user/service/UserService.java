@@ -5,9 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.thecommerce.user.dto.UserDto;
 import org.example.thecommerce.user.entity.User;
 import org.example.thecommerce.user.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Member;
 import java.util.Optional;
 
 @Slf4j
@@ -17,11 +22,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     @Transactional
-    public String join(UserDto userDto){
+    public String join(UserDto userDto) {
 
         String checkValidMsg = checkUserValid(userDto);
 
-        if(!checkValidMsg.equals("ok")){
+        if (!checkValidMsg.equals("ok")) {
             return checkValidMsg;
         }
 
@@ -37,6 +42,14 @@ public class UserService {
         }
 
     }
+
+    public Page<User> getUserList(int page, int pageSize, String sort) {
+
+        Sort sort1 = Sort.by(sort).descending();
+        Pageable pageable = PageRequest.of(page-1, pageSize, sort1);
+        return userRepository.findAll(pageable);
+    }
+
     private User convertDtoToEntity(UserDto userDto) {
         User user = new User();
         user.setId(userDto.getId());
@@ -59,5 +72,7 @@ public class UserService {
         return "ok";
     }
 
-
+    private boolean isValidSort(String sort) {
+        return sort.equals("enrollDate") || sort.equals("id");
+    }
 }
