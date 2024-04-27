@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
@@ -20,6 +21,9 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
     @Transactional
     public String join(UserDto userDto) {
 
@@ -73,7 +77,7 @@ public class UserService {
     private User convertDtoToEntity(UserDto userDto) {
         User user = new User();
         user.setId(userDto.getId());
-        user.setPwd(userDto.getPwd());
+        user.setPwd(passwordEncoder.encode(userDto.getPwd()));
         user.setNick(userDto.getNick());
         user.setPhone(userDto.getPhone());
         user.setEmail(userDto.getEmail());
