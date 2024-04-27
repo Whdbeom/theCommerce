@@ -5,16 +5,15 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.thecommerce.user.dto.UserDto;
+import org.example.thecommerce.user.dto.UserUpdateDto;
 import org.example.thecommerce.user.entity.User;
 import org.example.thecommerce.user.service.UserService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -43,8 +42,24 @@ public class UserController {
     @ApiModelProperty
     @ApiOperation(value = "회원 목록 조회", notes = "입력된 회원들의 정보를 목록으로 조회합니다")
     @GetMapping("/list")
-    public Page<User> listUser(@RequestParam int page, @RequestParam int pageSize, @RequestParam String sort) {
-        return userService.getUserList(page, pageSize, sort);
+    public ResponseEntity<Page<User>> listUser(
+            @RequestParam int page,
+            @RequestParam int pageSize,
+            @RequestParam String sort
+    ) {
+        return ResponseEntity.ok(userService.getUserList(page, pageSize, sort));
+    }
+
+    @ApiModelProperty
+    @ApiOperation(value = "회원 정보 수정", notes = "해당하는 아이디를 가진 회원의 정보가 수정됩니다.")
+    @PutMapping("/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable String userId, @RequestBody UserUpdateDto userUpdateDto) {
+        try {
+            User updatedUser = userService.updateUser(userId, userUpdateDto);
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

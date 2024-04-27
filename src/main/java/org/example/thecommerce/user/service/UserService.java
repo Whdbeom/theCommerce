@@ -3,6 +3,7 @@ package org.example.thecommerce.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.thecommerce.user.dto.UserDto;
+import org.example.thecommerce.user.dto.UserUpdateDto;
 import org.example.thecommerce.user.entity.User;
 import org.example.thecommerce.user.repository.UserRepository;
 import org.springframework.data.domain.Page;
@@ -45,9 +46,30 @@ public class UserService {
 
     public Page<User> getUserList(int page, int pageSize, String sort) {
 
-        Sort sort1 = Sort.by(sort).descending();
-        Pageable pageable = PageRequest.of(page-1, pageSize, sort1);
+        // 페이지 번호와 페이지 크기가 유효한지 검사
+        if (page <= 0 || pageSize <= 0) {
+            throw new IllegalArgumentException("페이지 번호와 페이지 크기는 음수가 될 수 없습니다.");
+        }
+        // 정렬 방식 검사
+        if (!isValidSort(sort)) {
+            throw new IllegalArgumentException("id 또는 enrollDate를 입력해야합니다.");
+        }
+
+        Sort sortString = Sort.by(sort).descending();
+        Pageable pageable = PageRequest.of(page-1, pageSize, sortString);
         return userRepository.findAll(pageable);
+    }
+
+    @Transactional
+    public User updateUser(String userId, UserUpdateDto userUpdateDto) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(() -> new Exception("해당 유저를 찾을 수 없습니다."));
+
+        if (userUpdateDto.getPwd() != null) user.setPwd(userUpdateDto.getPwd());
+        if (userUpdateDto.getNick() != null) user.setNick(userUpdateDto.getNick());
+        if (userUpdateDto.getPhone() != null) user.setPhone(userUpdateDto.getPhone());
+        if (userUpdateDto.getEmail() != null) user.setEmail(userUpdateDto.getEmail());
+
+        return userRepository.save(user);
     }
 
     private User convertDtoToEntity(UserDto userDto) {

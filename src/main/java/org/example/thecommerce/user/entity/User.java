@@ -1,6 +1,7 @@
 package org.example.thecommerce.user.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Table(name = "MEMBER")
 @Entity(name = "member")
 @Data
+@DynamicUpdate
 public class User {
 
     @Id
