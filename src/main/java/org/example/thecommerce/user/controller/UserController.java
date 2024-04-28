@@ -2,6 +2,7 @@ package org.example.thecommerce.user.controller;
 
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.thecommerce.user.dto.UserDto;
@@ -29,9 +30,6 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<String> join(@Valid @RequestBody UserDto userDto){
 
-        log.info("memberEntity : {} ", userDto);
-
-        System.out.println("조인메서드 실행");
         String resultMsg = userService.join(userDto);
 
         if (resultMsg.equals("회원가입 성공")) {
@@ -44,9 +42,9 @@ public class UserController {
     @ApiOperation(value = "회원 목록 조회", notes = "입력된 회원들의 정보를 목록으로 조회합니다")
     @GetMapping("/list")
     public ResponseEntity<Page<UserListDto>> listUser(
-            @RequestParam int page,
-            @RequestParam int pageSize,
-            @RequestParam String sort
+            @RequestParam @ApiParam(value = "페이지 번호", example = "1") int page,
+            @RequestParam @ApiParam(value = "한 페이지에 표시될 수 있는 최대 회원 수", example = "5") int pageSize,
+            @RequestParam @ApiParam(value = "정렬방식 (enrollDate 또는 id)", example = "enrollDate") String sort
     ) {
         return ResponseEntity.ok(userService.getUserList(page, pageSize, sort));
     }
