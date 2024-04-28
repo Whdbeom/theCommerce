@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.thecommerce.user.dto.UserDto;
+import org.example.thecommerce.user.dto.UserListDto;
 import org.example.thecommerce.user.dto.UserUpdateDto;
 import org.example.thecommerce.user.entity.User;
 import org.example.thecommerce.user.service.UserService;
@@ -42,7 +43,7 @@ public class UserController {
     @ApiModelProperty
     @ApiOperation(value = "회원 목록 조회", notes = "입력된 회원들의 정보를 목록으로 조회합니다")
     @GetMapping("/list")
-    public ResponseEntity<Page<User>> listUser(
+    public ResponseEntity<Page<UserListDto>> listUser(
             @RequestParam int page,
             @RequestParam int pageSize,
             @RequestParam String sort

@@ -3,6 +3,7 @@ package org.example.thecommerce.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.thecommerce.user.dto.UserDto;
+import org.example.thecommerce.user.dto.UserListDto;
 import org.example.thecommerce.user.dto.UserUpdateDto;
 import org.example.thecommerce.user.entity.User;
 import org.example.thecommerce.user.repository.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
@@ -20,6 +22,9 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
     @Transactional
     public String join(UserDto userDto) {
 
@@ -42,7 +47,7 @@ public class UserService {
 
     }
 
-    public Page<User> getUserList(int page, int pageSize, String sort) {
+    public Page<UserListDto> getUserList(int page, int pageSize, String sort) {
 
         // 페이지 번호와 페이지 크기가 유효한지 검사
         if (page <= 0 || pageSize <= 0) {
@@ -55,7 +60,9 @@ public class UserService {
 
         Sort sortString = Sort.by(sort).descending();
         Pageable pageable = PageRequest.of(page-1, pageSize, sortString);
-        return userRepository.findAll(pageable);
+        Page<User> userPage = userRepository.findAll(pageable);
+
+        return userPage.map(this::convertUserListDto);
     }
 
     @Transactional
@@ -73,11 +80,21 @@ public class UserService {
     private User convertDtoToEntity(UserDto userDto) {
         User user = new User();
         user.setId(userDto.getId());
-        user.setPwd(userDto.getPwd());
+        user.setPwd(passwordEncoder.encode(userDto.getPwd()));
         user.setNick(userDto.getNick());
         user.setPhone(userDto.getPhone());
         user.setEmail(userDto.getEmail());
         return user;
+    }
+
+    private UserListDto convertUserListDto(User user){
+        UserListDto userListDto = new UserListDto();
+        userListDto.setId(user.getId());
+        userListDto.setNick(user.getNick());
+        userListDto.setPhone(user.getPhone());
+        userListDto.setEmail(user.getEmail());
+        userListDto.setEnrollDate(user.getEnrollDate());
+        return userListDto;
     }
 
     private String checkUserValid(UserDto userDto){

@@ -20,9 +20,5 @@ server:
       charset: utf-8
       enabled: true
 
-  config:
-    import:
-      - classpath:/config/secret.yml
-
 logging.level:
   org.hibernate.SQL: trace
