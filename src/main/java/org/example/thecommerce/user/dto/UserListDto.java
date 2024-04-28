@@ -2,7 +2,6 @@ package org.example.thecommerce.user.dto;
 
 import lombok.Data;
 
-import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 @Data
