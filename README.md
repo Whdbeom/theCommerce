@@ -3,8 +3,8 @@
 
 ## 실행방법
 1. Git을 통해 소스 코드를 클론합니다.
-2. Maven을 사용하여 프로젝트를 빌드합니다.
-3. IDE에서 프로젝트를 열고, TheCommerceApplication을 실행합니다.
+2. Run Configuration에 org.example.thecommerce.TheCommerceApplication를 설정합니다.
+3. TheCommerceApplication을 실행합니다.
 
 ## 기술스택
 * JDK 버전: 1.8
